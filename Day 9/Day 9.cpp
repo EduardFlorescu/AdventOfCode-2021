@@ -7,50 +7,21 @@
 
 using namespace std;
 
+vector<int>lin{ -1,+1,0,0 };
+vector<int>col{ 0,0,-1,+1 };
+
 int calculatePart1(vector<string> lines) {
 	int solutionPart1 = 0;
 	for (int i = 0;i < lines.size();i++) {
 		for (int j = 0;j < lines[i].size();j++) {
 			bool numberIsMin = true;
-
-			if (j - 1 >= 0) {
-				if (lines[i][j - 1] < lines[i][j]) {
-					numberIsMin = false;
-				}
-			}
-			if (j + 1 < lines[i].size()) {
-				if (lines[i][j + 1] < lines[i][j]) {
-					numberIsMin = false;
-				}
-			}
-			if (i + 1 < lines.size()) {
-				if (lines[i + 1][j] < lines[i][j]) {
-					numberIsMin = false;
-				}
-			}
-			if (i - 1 >= 0) {
-				if (lines[i - 1][j] < lines[i][j]) {
-					numberIsMin = false;
-				}
-			}
-			if (i - 1 >= 0 && j - 1 >= 0) {
-				if (lines[i - 1][j - 1] < lines[i][j]) {
-					numberIsMin = false;
-				}
-			}
-			if (i - 1 >= 0 && j + 1 < lines[i].size()) {
-				if (lines[i - 1][j + 1] < lines[i][j]) {
-					numberIsMin = false;
-				}
-			}
-			if (i + 1 < lines.size() && j - 1 >= 0) {
-				if (lines[i + 1][j - 1] < lines[i][j]) {
-					numberIsMin = false;
-				}
-			}
-			if (i + 1 < lines.size() && j + 1 < lines[i].size()) {
-				if (lines[i + 1][j + 1] < lines[i][j]) {
-					numberIsMin = false;
+			for (int k = 0;k < lin.size();k++) {
+				int x = i + lin[k];
+				int y = j + col[k];
+				if (x >= 0 && x < lines.size() && y >= 0 && y < lines[i].size()) {
+					if (lines[x][y] <= lines[i][j]) {
+						numberIsMin = false;
+					}
 				}
 			}
 			if (numberIsMin) {
@@ -72,31 +43,19 @@ int calculatePart2(vector<string> lines) {
 			if (lines[i][j] != '9' && matrixTrack[i][j] == 0) {
 				matrixTrack[i][j] == 1;
 				q.push(make_pair(i, j));
-
 				while (!q.empty()) {
 					pair<int, int> posNumber = q.front();
 					int i2 = posNumber.first;
 					int j2 = posNumber.second;
 					q.pop();
-					if (j2 - 1 >= 0 && matrixTrack[i2][j2 - 1] == 0 && lines[i2][j2 - 1] != '9') {
-						matrixTrack[i2][j2 - 1] = 1;
-						q.push(make_pair(i2, j2 - 1));
-						countElements++;
-					}
-					if (j2 + 1 < lines[i2].size() && matrixTrack[i2][j2 + 1] == 0 && lines[i2][j2 + 1] != '9') {
-						matrixTrack[i2][j2 + 1] = 1;
-						q.push(make_pair(i2, j2 + 1));
-						countElements++;
-					}
-					if (i2 + 1 < lines.size() && matrixTrack[i2 + 1][j2] == 0 && lines[i2 + 1][j2] != '9') {
-						matrixTrack[i2 + 1][j2] = 1;
-						q.push(make_pair(i2 + 1, j2));
-						countElements++;
-					}
-					if (i2 - 1 >= 0 && matrixTrack[i2 - 1][j2] == 0 && lines[i2 - 1][j2] != '9') {
-						matrixTrack[i2 - 1][j2] = 1;
-						q.push(make_pair(i2 - 1, j2));
-						countElements++;
+					for (int k = 0;k < lin.size();k++) {
+						int x = i2 + lin[k];
+						int y = j2 + col[k];
+						if (x >= 0 && x < lines.size() && y >= 0 && y < lines[i].size() && lines[x][y] != '9' && matrixTrack[x][y] == 0) {
+							matrixTrack[x][y] = 1;
+							q.push(make_pair(x, y));
+							countElements++;
+						}
 					}
 				}
 				sizeBasins.push_back(countElements);
